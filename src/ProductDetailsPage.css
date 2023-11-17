@@ -1,0 +1,15 @@
+.product-details {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .error {
+    color: red;
+  }
+  
+  .loading {
+    font-style: italic;
+    color: #888;
+  }
+  

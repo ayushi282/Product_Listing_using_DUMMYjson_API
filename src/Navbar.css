@@ -1,0 +1,27 @@
+nav {
+    background-color: hsl(316, 82%, 89%);
+    padding: 10px;
+    box-shadow: #ffcc00;
+  }
+  
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+  }
+  
+  li {
+    margin-right: 20px;
+  }
+  
+  li a {
+    text-decoration: none;
+    color: rgb(8, 3, 3);
+    font-weight: bold;
+  }
+  
+  li a:hover {
+    color: #ff0000;
+  }
+  
