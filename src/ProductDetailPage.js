@@ -1,40 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
-import './ProductDetailsPage.css';
+import { useProductContext } from './ProductContext';
 
 const ProductDetailsPage = () => {
   const { productId } = useParams();
-  const [product, setProduct] = useState(null);
-  const [error, setError] = useState(null);
+  const { products, fetchData, error } = useProductContext();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`https://dummyjson.com/products`);
-        const data = await response.json();
-
-        if (data && data.products && Array.isArray(data.products)) {
-          const selectedProduct = data.products.find((p) => p.id === parseInt(productId));
-          setProduct(selectedProduct);
-        } else {
-          console.error('Invalid JSON format:', data);
-          setError('Invalid JSON format');
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setError('Error fetching data');
-      }
-    };
-
-    fetchData();
-  }, [productId]);
+ 
+  React.useEffect(() => {
+    fetchData(productId);
+  }, [productId, fetchData]);
 
   if (error) {
     return <div>Error: {error}</div>;
   }
 
-  if (!product) {
+  if (!products.length) {
     return <div>Loading...</div>;
+  }
+  const product = products.find((p) => p.id === parseInt(productId, 10));
+
+  if (!product) {
+    return <div>Product not found</div>;
   }
 
   return (
@@ -42,10 +29,9 @@ const ProductDetailsPage = () => {
       <h1>{product.title}</h1>
       <p>{product.description}</p>
       <p>Price: ${product.price}</p>
-      
       <img src={product.thumbnail} alt={product.title} />
     </div>
   );
 };
 
-export default ProductDetailsPage;
+export default React.memo(ProductDetailsPage);

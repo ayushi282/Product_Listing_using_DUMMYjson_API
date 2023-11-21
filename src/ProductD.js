@@ -1,33 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import './ProductDetail.css'; 
+import { useProductContext } from './ProductContext';
 const ProductD = () => {
-  const [products, setProducts] = useState([]);
-  const [error, setError] = useState(null);
+  const { products, error, fetchData } = useProductContext();
   const [searchTerm, setSearchTerm] = useState('');
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('https://dummyjson.com/products');
-        const data = await response.json();
-
-        if (data && data.products && Array.isArray(data.products)) {
-          setProducts(data.products);
-        } else {
-          console.error('Invalid JSON format:', data);
-          setError('Invalid JSON format');
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setError('Error fetching data');
-      }
-    };
-
+    useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
-  const handleSearch = (e) => {
+   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
 
@@ -65,4 +47,4 @@ const ProductD = () => {
   );
 };
 
-export default ProductD;
+export default React.memo(ProductD);
