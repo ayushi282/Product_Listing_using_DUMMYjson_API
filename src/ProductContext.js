@@ -1,51 +1,41 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-
+import { loginAPI } from './authApi';
 const ProductContext = createContext();
 
 export const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  const login = async (username, password) => {
+   const login = async (username, password) => {
     try {
-      const response = await fetch('https://dummyjson.com/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: 'kminchelle',
-          password: '0lelplR',
-        }),
-      });
-      const data = await response.json();
-
-      if (data.token) {
-        setUser({ username, token: data.token });
-        fetchData(); 
-      } else {
-        console.error('Invalid login:', data);
-        setError('Invalid login');
-      }
+      const userData = await loginAPI(username, password);
+      setUser(userData);
+      // fetchData(); 
     } catch (error) {
-      console.error('Error during login:', error);
-      setError('Error during login');
+      setError(error.message);
     }
   };
 
-  const fetchData = useCallback(async (productId) => {
+   const fetchData = useCallback(async (productId) => {
     try {
       const response = await fetch('https://dummyjson.com/products');
       const data = await response.json();
       if (data && data.products && Array.isArray(data.products)) {
-        if (productId) {
-          const selectedProduct = data.products.find((p) => p.id === parseInt(productId));
+        // if (productId) {
           setProducts(data.products);
+          if (productId) {
+          const selectedProduct = data.products.find((p) => p.id === parseInt(productId));
+          
           setSelectedProduct(selectedProduct); 
-        } else {
-                   setProducts(data.products);
-        }
+          console.log(selectedProduct);
+          
+          }
+        // } else {
+                  //  setProducts(data.products);
+        // }
       } else {
         console.error('Invalid JSON format:', data);
         setError('Invalid JSON format');
@@ -56,7 +46,9 @@ export const ProductProvider = ({ children }) => {
     }
   }, []);
   
-  
+  const logout=()=>{
+    setUser(null);
+  };
 
   useEffect(() => {
         if (user) {
@@ -65,7 +57,7 @@ export const ProductProvider = ({ children }) => {
   }, [user, fetchData]);
 
   return (
-    <ProductContext.Provider value={{ products, error, fetchData, login, user }}>
+    <ProductContext.Provider value={{ products, error, fetchData, login,logout, user }}>
       {children}
     </ProductContext.Provider>
   );

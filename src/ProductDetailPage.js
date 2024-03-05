@@ -1,13 +1,15 @@
 import React from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useProductContext } from './ProductContext';
+import './ProductDetailsPage.css'
 
 const ProductDetailsPage = () => {
   const { productId } = useParams();
   const { products, fetchData, error } = useProductContext();
 
  
-  React.useEffect(() => {
+useEffect(() => {
     fetchData(productId);
   }, [productId, fetchData]);
 
@@ -27,8 +29,10 @@ const ProductDetailsPage = () => {
   return (
     <div className="product-details">
       <h1>{product.title}</h1>
+      <p>Rating:  *{product.rating}*</p>
       <p>{product.description}</p>
       <p>Price: ${product.price}</p>
+      <p><span>Stock:</span>  {product.stock}</p>
       <img src={product.thumbnail} alt={product.title} />
     </div>
   );
