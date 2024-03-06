@@ -17,7 +17,7 @@ const ProductD = () => {
     setSelectedIndex(null); 
   };
 
-  const handleKeyDown = (e) => {
+  const handleKey = (e) => {
     if (e.key === 'ArrowUp') {
       e.preventDefault();
       setSelectedIndex((prevIndex) =>
@@ -48,7 +48,7 @@ const ProductD = () => {
           placeholder="Search products..."
           value={searchTerm}
           onChange={handleSearch}
-          onKeyDown={handleKeyDown}
+          onKeyDown={handleKey}
         />
       </div>
       <div className="product-list">
